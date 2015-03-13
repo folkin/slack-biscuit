@@ -34,9 +34,10 @@ node_modules
 # OSX
 # =========================
 
-.DS_Store
+.DS_Store*
 .AppleDouble
 .LSOverride
+.hubot_history
 
 # Thumbnails
 ._*
