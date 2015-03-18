@@ -10,7 +10,7 @@
 
 (function() {
 	module.exports =  function(robot) {
-		robot.respond(/weather/, function (msg) {
+		robot.respond(/.*weather.*/i, function (msg) {
 			return msg.http("http://api.wunderground.com/api/20653698ddd9aa70/conditions/q/IN/Bloomington.json").get() (function (err, res, body) {
 				if (err){
 					console.log( "we had an error: " + err);
@@ -21,13 +21,12 @@
 					var temp = data.current_observation.temp_f;
 					var feelslike = data.current_observation.feelslike_f;
 					var wind = data.current_observation.wind_string;
-					console.log("Current conditions in Bloomington, IN: " + weather + ", " + temp + " degrees: feelslike " + feelslike + " with wind " + wind);
-					return;
+					return msg.send("Current conditions in Bloomington, IN: " + weather + ", " + temp + " degrees: feelslike " + feelslike + " with wind " + wind);
 				}
 			});
 		});
-		
-		robot.respond(/forecast/, function (msg) {
+
+		robot.respond(/.*forecast.*/i, function (msg) {
 			return msg.http("http://api.wunderground.com/api/20653698ddd9aa70/forecast/q/IN/Bloomington.json").get() (function (err, res, body) {
 				if (err){
 					console.log( "we had an error: " + err);
@@ -38,31 +37,11 @@
 					for (var i=0; i<forecasts.length; i++) {
 					    var forecast = forecasts[i];
 					    if(forecast["period"] === 2){
-							console.log("Weather for " + forecast["title"] + ": " + forecast["fcttext"]);
-							return;
-						}						
+							return msg.send("Weather for " + forecast["title"] + ": " + forecast["fcttext"]);
+						}
 					}
 				}
 			});
 		});
 	};
 }).call(this);
-
-//	robot.respond /forecast/i, (msg) ->
-//		msg.http("http://api.wunderground.com/api/20653698ddd9aa70/forecast/q/IN/Bloomington.json")
-//			.get() (err, res, body) ->
-//				if err
-//					console.log( "we had an error: #{err}")
-//				else
-//					data = JSON.parse(body)
-//					objects = data.forecast.txt_forecast.forecastday
-//					console.log("I just really don't know what the weather looks like tomorrow. Sorry about that.")
-
-//var arr = [];
-//for (var i=0; i<json.forecast.simpleforecast.forecastday.length; i++) {
-//  var forecast = json.forecast.simpleforecast.forecastday[i];
-//  for (var j=0; j<forecast.some_other_array.length; j++) {
-//    var some_other_var = forecast.some_other_array[j];
-//    arr.push(some_other_var.whatever);
-//  }
-//}
